@@ -1,0 +1,9 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+COPY logging-service.py messages_pb2.py messages_pb2_grpc.py /app/
+
+RUN pip install --no-cache-dir grpcio grpcio-tools hazelcast-python-client protobuf
+
+CMD ["python", "logging-service.py"]

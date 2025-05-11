@@ -1,0 +1,78 @@
+services:
+  hazelcast1:
+    image: hazelcast/hazelcast:5.3
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5701/hazelcast/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  hazelcast2:
+    image: hazelcast/hazelcast:5.3
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5701/hazelcast/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  hazelcast3:
+    image: hazelcast/hazelcast:5.3
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5701/hazelcast/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  logging1:
+    build:
+      context: .
+      dockerfile: Dockerfile.logging
+    environment:
+      - PORT=50051
+      - HZ_ADDRESS=hazelcast1:5701
+    command: python logging-service.py
+    depends_on:
+      hazelcast1:
+        condition: service_healthy
+
+  logging2:
+    build:
+      context: .
+      dockerfile: Dockerfile.logging
+    environment:
+      - PORT=50052
+      - HZ_ADDRESS=hazelcast2:5701
+    command: python logging-service.py
+    depends_on:
+      hazelcast2:
+        condition: service_healthy
+
+  logging3:
+    build:
+      context: .
+      dockerfile: Dockerfile.logging
+    environment:
+      - PORT=50053
+      - HZ_ADDRESS=hazelcast3:5701
+    command: python logging-service.py
+    depends_on:
+      hazelcast3:
+        condition: service_healthy
+
+  facade:
+    build:
+      context: .
+      dockerfile: Dockerfile.facade
+    ports:
+      - "8880:8880"
+    depends_on:
+      - config-server
+    command: python facade-service.py
+
+  config-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.config-server
+    ports:
+      - "5000:5000"
+    command: python config-server.py
