@@ -67,7 +67,7 @@ services:
 
   config-server:
     build:
-      context: ./config-server
+      context: .
     command: ["python", "config-server.py", "services.json"]
     ports:
       - "8888:8888"
@@ -75,7 +75,7 @@ services:
   
   facade-service:
     build:
-      context: ./facade-service
+      context: .
     ports:
       - "8880:8880"
     depends_on:
@@ -85,7 +85,7 @@ services:
 
   messages-service1:
     build:
-      context: ./messages-service
+      context: .
     environment:
       - INSTANCE_ID=msg1
       - PORT=8890
@@ -96,7 +96,7 @@ services:
 
   messages-service2:
     build:
-      context: ./messages-service
+      context: .
     environment:
       - INSTANCE_ID=msg2
       - PORT=8891
@@ -108,7 +108,7 @@ services:
 
   logging-service1:
     build:
-      context: ./logging-service
+      context: .
     environment:
       - INSTANCE_ID=log1
       - PORT=8881
@@ -121,7 +121,7 @@ services:
 
   logging-service2:
     build:
-      context: ./logging-service
+      context: .
     environment:
       - INSTANCE_ID=log2
       - PORT=8882
@@ -134,7 +134,7 @@ services:
 
   logging-service3:
     build:
-      context: ./logging-service
+      context: .
     environment:
       - INSTANCE_ID=log3
       - PORT=8883
